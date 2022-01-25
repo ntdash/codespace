@@ -25,6 +25,6 @@ RUN pacman -S --noconfirm \
    # tools for aur package building
    base-devel
 
-ADD ./scripts/setup-user.sh /tmp/lib-scripts
+ADD ./scripts/setup-user.sh /tmp/scripts/
 
-RUN bash /tm/lib-scrits/setup-user.sh "${USERNAME}" "${UPASSWD}"
+RUN ls -lAH /tmp/scripts && bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"
