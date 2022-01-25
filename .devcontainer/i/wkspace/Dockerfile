@@ -1,8 +1,5 @@
 FROM archlinux:latest
 
-ARG USERNAME='code'
-ARG UPASSWD='secret'
-
 # install reflector package
 RUN pacman -Sy --noconfirm reflector \
    # update mirrors list
@@ -25,6 +22,8 @@ RUN pacman -S --noconfirm \
    # tools for aur package building
    base-devel
 
-ADD ./scripts/setup-user.sh /tmp/scripts/
+ARG USERNAME='code'
+ARG UPASSWD='secret'
 
+ADD ./scripts/setup-user.sh /tmp/scripts/
 RUN ls -lAH /tmp/scripts && bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"

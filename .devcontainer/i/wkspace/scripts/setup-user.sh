@@ -3,6 +3,8 @@
 USERNAME=${1:-'code'}
 UPASSWD=${2:-'secret'}
 
+echo -e "\nCreating a new user with root permission with the following credentials:\nusername: $USERNAME\npassword: $UPASSWD...\n\n"
+
 # create non-root user
 useradd -mp "${UPASSWD}" "${USERNAME}"
 
