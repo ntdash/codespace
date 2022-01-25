@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+   wkspace:
+      build:
+         context: i/wkspace
+         dockerfile: Dockerfile
+      volumes:
+         - wkspace:/wkspace
+      command: /bin/sh -c "while sleep 1000; do :; done"
+
+networks:
+   frontend:
+   backend:
+
+volumes:
+   wkspace:

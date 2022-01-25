@@ -1,0 +1,13 @@
+{
+   "name": "Codespace (Archlinux based)",
+
+   "dockerComposeFile": "docker-compose.yml",
+
+   "service": "wkspace",
+
+   "workspaceFolder": "/wkspace",
+
+   "settings": {},
+
+   "remoteUser": "code"
+}
