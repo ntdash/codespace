@@ -7,7 +7,7 @@ UPASSWD=${2:-'secret'}
 useradd -mp "${UPASSWD}" "${USERNAME}"
 
 # grant root privilege to the newly created non-root user
-echo ${USERNAME} ALL=(ALL) ALL > /etc/sudoers.d/${USERNAME}
+echo ${USERNAME} ALL=\(ALL\) ALL > /etc/sudoers.d/${USERNAME}
 chmod 0440 /etc/sudoers.d/${USERNAME}
 
 # add basics groups to it
