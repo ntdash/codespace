@@ -11,7 +11,7 @@ services:
             UPASSWD: ${UPASSWD}
       env_file: .env
       volumes:
-         - wkspace:/wkspace
+         - wkspace:${WORKDIR:-'/wkspace'}
 networks:
    frontend:
    backend:
