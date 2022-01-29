@@ -26,4 +26,4 @@ ARG USERNAME='code'
 ARG UPASSWD='secret'
 
 ADD ./scripts/setup-user.sh /tmp/scripts/
-RUN ls -lAH /tmp/scripts && bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"
+RUN bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"
