@@ -1,25 +1,25 @@
 FROM archlinux:latest
 
-# install reflector package
+# Install reflector package
 RUN pacman -Sy --noconfirm reflector \
-   # update mirrors list
+   # Update mirrors list
    && reflector \
-   # update system package
+   # Update system package
    && pacman -Syyu --noconfirm
 
 
-# install needed base package
+# Install needed base package
 RUN pacman -S --noconfirm \
-   # basics tool
+   # Basics tool
    git \
    sudo \
    neovim \
-   # docker suite
+   # Docker suite
    helm \
    docker \
    kubectl \
    docker-compose \
-   # tools for aur package building
+   # Tools for aur package building
    base-devel
 
 ARG USERNAME='code'
