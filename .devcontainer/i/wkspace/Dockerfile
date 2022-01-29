@@ -8,7 +8,7 @@ RUN pacman -Sy --noconfirm reflector \
    && pacman -Syyu --noconfirm
 
 
-# Install needed base package
+# Install needed base tools
 RUN pacman -S --noconfirm \
    # Basics tool
    git \
@@ -19,11 +19,23 @@ RUN pacman -S --noconfirm \
    docker \
    kubectl \
    docker-compose \
-   # Tools for aur package building
+   # Tools for aur tools building
    base-devel
 
+# Nonroot user section
 ARG USERNAME='code'
 ARG UPASSWD='secret'
 
 ADD ./scripts/setup-user.sh /tmp/scripts/
 RUN bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"
+
+# Custom entrypoint Setup
+ADD ./scripts/init.sh /usr/local/share/
+RUN mkdir -p /usr/local/share/init.d \
+   && chmod +x /usr/local/share/init.sh
+
+# Allow nonroot user to run custom entrypoint script
+RUN chown "${USERNAME}":root /usr/local/share/init.d /usr/local/share/init.sh
+
+ENTRYPOINT [ "/usr/local/share/init.sh" ]
+CMD ["while sleep 1000; do :; done"]

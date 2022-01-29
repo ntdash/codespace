@@ -12,8 +12,6 @@ services:
       env_file: .env
       volumes:
          - wkspace:/wkspace
-      command: /bin/sh -c "while sleep 1000; do :; done"
-
 networks:
    frontend:
    backend:
