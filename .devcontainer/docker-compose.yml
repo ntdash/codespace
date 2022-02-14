@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+   wkspace:
+      build:
+         context: i/wkspace
+         dockerfile: Dockerfile
+         args:
+            USERNAME: ${USERNAME}
+            UPASSWD: ${UPASSWD}
+            VARIANT: ${VARIANT}
+            ENABLE_NONROOT_DOCKER: ${ENABLE_NONROOT_DOCKER}
+            NODE_VERSION: ${NODE_VERSION}
+      env_file: .env
+      volumes:
+         - wkspace:${WORKDIR:-'/wkspace'}
+         - /var/run/docker.sock:/var/run/docker-host.sock
+networks:
+   frontend:
+   backend:
+
+volumes:
+   wkspace:
