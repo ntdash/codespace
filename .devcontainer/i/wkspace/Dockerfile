@@ -1,4 +1,5 @@
-FROM archlinux:latest
+ARG VARIANT="base-devel"
+FROM archlinux:${VARIANT}
 
 # Install reflector package
 RUN pacman -Sy --noconfirm reflector \
@@ -11,10 +12,7 @@ RUN pacman -Sy --noconfirm reflector \
 RUN pacman -Sy --noconfirm \
    # Basics tool
    git \
-   sudo \
-   neovim \
-   # Tools for aur tools building
-   base-devel
+   neovim
 
 # Nonroot user section
 ARG USERNAME='code'

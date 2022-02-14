@@ -7,6 +7,12 @@ UPASSWD=${2:-'secret'}
 useradd -mp "${UPASSWD}" "${USERNAME}"
 
 # Grant root privilege to the newly created non-root user
+
+# Install sudo if not already install
+if  ! type sudo > /dev/null 2>&1; then
+   pacman -Sy --noconfirm sudo
+fi
+
 echo ${USERNAME} ALL=\(ALL\) ALL > /etc/sudoers.d/${USERNAME}
 chmod 0440 /etc/sudoers.d/${USERNAME}
 

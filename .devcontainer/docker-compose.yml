@@ -9,6 +9,7 @@ services:
          args:
             USERNAME: ${USERNAME}
             UPASSWD: ${UPASSWD}
+            VARIANT: ${VARIANT}
       env_file: .env
       volumes:
          - wkspace:${WORKDIR:-'/wkspace'}
