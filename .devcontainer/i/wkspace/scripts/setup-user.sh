@@ -17,7 +17,7 @@ usermod -aG optical,storage "${USERNAME}"
 # Install zsh and change the newly created user's default shell
 
 # Install zsh
-pacman -S --noconfirm zsh
+pacman -Sy --noconfirm zsh
 
 # Install ohmyzsh
 su ${USERNAME} -c 'bash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'

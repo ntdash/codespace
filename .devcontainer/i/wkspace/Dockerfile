@@ -8,7 +8,7 @@ RUN pacman -Sy --noconfirm reflector \
    && pacman -Syyu --noconfirm
 
 # Install needed base tools
-RUN pacman -S --noconfirm \
+RUN pacman -Sy --noconfirm \
    # Basics tool
    git \
    sudo \
