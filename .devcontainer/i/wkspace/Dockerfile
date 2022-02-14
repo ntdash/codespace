@@ -33,6 +33,12 @@ ARG ENABLE_NONROOT_DOCKER='true'
 ADD ./scripts/docker-from-docker.sh /tmp/scripts/
 RUN bash /tmp/scripts/docker-from-docker.sh "${USERNAME}" "${ENABLE_NONROOT_DOCKER}"
 
+# Install node suite (nodejs, npm, yarn)
+ARG NODE_VERSION='lts'
+
+ADD .devcontainer/i/wkspace/scripts/node.sh /tmp/scripts/
+RUN bash /tmp/scripts/node.sh "${USERNAME}" "${NODE_VERSION}"
+
 # Resolve paths given as arguments to allow user nonroot after container creation to access it ...
 ADD ./scripts/ownership-resolver.sh /tmp/scripts/
 RUN bash /tmp/scripts/ownership-resolver.sh "${USERNAME}" "${WORKDIR}"

@@ -11,6 +11,7 @@ services:
             UPASSWD: ${UPASSWD}
             VARIANT: ${VARIANT}
             ENABLE_NONROOT_DOCKER: ${ENABLE_NONROOT_DOCKER}
+            NODE_VERSION: ${NODE_VERSION}
       env_file: .env
       volumes:
          - wkspace:${WORKDIR:-'/wkspace'}
