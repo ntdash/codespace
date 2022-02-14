@@ -27,6 +27,12 @@ ADD ./scripts/init.sh /usr/local/share/
 RUN mkdir -p /usr/local/share/init.d \
    && chmod +x /usr/local/share/init.sh
 
+# Docker-from-docker section
+ARG ENABLE_NONROOT_DOCKER='true'
+
+ADD ./scripts/docker-from-docker.sh /tmp/scripts/
+RUN bash /tmp/scripts/docker-from-docker.sh "${USERNAME}" "${ENABLE_NONROOT_DOCKER}"
+
 # Resolve paths given as arguments to allow user nonroot after container creation to access it ...
 ADD ./scripts/ownership-resolver.sh /tmp/scripts/
 RUN bash /tmp/scripts/ownership-resolver.sh "${USERNAME}" "${WORKDIR}"

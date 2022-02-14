@@ -10,9 +10,11 @@ services:
             USERNAME: ${USERNAME}
             UPASSWD: ${UPASSWD}
             VARIANT: ${VARIANT}
+            ENABLE_NONROOT_DOCKER: ${ENABLE_NONROOT_DOCKER}
       env_file: .env
       volumes:
          - wkspace:${WORKDIR:-'/wkspace'}
+         - /var/run/docker.sock:/var/run/docker-host.sock
 networks:
    frontend:
    backend:
