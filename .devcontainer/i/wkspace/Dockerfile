@@ -7,18 +7,12 @@ RUN pacman -Sy --noconfirm reflector \
    # Update system package
    && pacman -Syyu --noconfirm
 
-
 # Install needed base tools
 RUN pacman -S --noconfirm \
    # Basics tool
    git \
    sudo \
    neovim \
-   # Docker suite
-   helm \
-   docker \
-   kubectl \
-   docker-compose \
    # Tools for aur tools building
    base-devel
 

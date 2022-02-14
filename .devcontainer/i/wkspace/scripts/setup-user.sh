@@ -11,7 +11,7 @@ echo ${USERNAME} ALL=\(ALL\) ALL > /etc/sudoers.d/${USERNAME}
 chmod 0440 /etc/sudoers.d/${USERNAME}
 
 # Add basics groups to it
-usermod -aG optical,docker,storage "${USERNAME}"
+usermod -aG optical,storage "${USERNAME}"
 
 
 # Install zsh and change the newly created user's default shell
