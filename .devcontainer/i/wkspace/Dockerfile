@@ -36,7 +36,7 @@ RUN bash /tmp/scripts/docker-from-docker.sh "${USERNAME}" "${ENABLE_NONROOT_DOCK
 # Install node suite (nodejs, npm, yarn)
 ARG NODE_VERSION='lts'
 
-ADD .devcontainer/i/wkspace/scripts/node.sh /tmp/scripts/
+ADD ./scripts/node.sh /tmp/scripts/
 RUN bash /tmp/scripts/node.sh "${USERNAME}" "${NODE_VERSION}"
 
 # Resolve paths given as arguments to allow user nonroot after container creation to access it ...
