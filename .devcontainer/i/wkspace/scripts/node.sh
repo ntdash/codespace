@@ -17,10 +17,10 @@ updaterc() {
 
    echo "Updating /home/${USERNAME}/.bashrc and /home/${USERNAME}/.zshrc..."
    if [[ "$(cat /home/${USERNAME}/.bashrc)" != *"$1"* ]]; then
-      echo -e "$1" >> "/home/${USERNAME}/.bashrc"
+      echo -e "\n\n$$1" >> "/home/${USERNAME}/.bashrc"
    fi
    if [ -f "/home/${USERNAME}/.zshrc" ] && [[ "$(cat /home/${USERNAME}/.zshrc)" != *"$1"* ]]; then
-      echo -e "$1" >> "/home/${USERNAME}/.zshrc"
+      echo -e "\n\n$1" >> "/home/${USERNAME}/.zshrc"
    fi
 }
 
@@ -34,27 +34,10 @@ usermod -a -G nvm ${USERNAME}
 mkdir -p ${NVM_DIR}
 chown :nvm ${NVM_DIR}
 chmod g+s ${NVM_DIR}
-su ${USERNAME} -c "$(cat << EOF
-    set -e
-    umask 0002
-    # Do not update profile - we'll do this manually
-    export PROFILE=/dev/null
-    curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash
-    source ${NVM_DIR}/nvm.sh
-    if [ "${NODE_VERSION}" != "" ]; then
-        nvm alias default ${NODE_VERSION}
-    fi
-    nvm clear-cache
-EOF
-)" 2>&1
+su ${USERNAME} -c "$(cat /tmp/node-installer.stub)" 2>&1
 
 # update bash and zsh `rc` files
-updaterc "$(cat <<EOF
-export NVM_DIR="${NVM_DIR}"
-[ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
-[ -s "\$NVM_DIR/bash_completion" ] && . "\$NVM_DIR/bash_completion"
-EOF
-)"
+updaterc "$(cat /tmp/nvm-loader.stub)"
 
 # install yarn
 if type yarn > /dev/null 2>&1; then

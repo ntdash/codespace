@@ -35,19 +35,19 @@ RUN mkdir -p /usr/local/share/init.d \
 # Docker-from-docker section
 ARG ENABLE_NONROOT_DOCKER='true'
 
-ADD ./scripts/docker-from-docker.sh /tmp/scripts/
+ADD ./stubs/docker-init.stub ./scripts/docker-from-docker.sh /tmp/scripts/
 RUN bash /tmp/scripts/docker-from-docker.sh "${USERNAME}" "${ENABLE_NONROOT_DOCKER}"
 
 # Install node suite (nodejs, npm, yarn)
 ARG NODE_VERSION='lts'
 
-ADD ./scripts/node.sh /tmp/scripts/
+ADD ./stubs/node-installer.stub ./stubs/nvm-loader.stub ./scripts/node.sh /tmp/scripts/
 RUN bash /tmp/scripts/node.sh "${USERNAME}" "${NODE_VERSION}"
 
 # Resolve paths given as arguments to allow user nonroot after container creation to access it ...
 ARG OLIST="${WORKDIR}"
 
-ADD ./scripts/ownership-resolver.sh /tmp/scripts/
+ADD ./stubs/ownership-resolver.stub ./scripts/ownership-resolver.sh /tmp/scripts/
 RUN bash /tmp/scripts/ownership-resolver.sh "${USERNAME}" "${OLIST}"
 
 # Allow nonroot user to run custom entrypoint script
