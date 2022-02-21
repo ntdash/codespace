@@ -13,14 +13,11 @@ services:
             ENABLE_NONROOT_DOCKER: ${ENABLE_NONROOT_DOCKER}
             NODE_VERSION: ${NODE_VERSION}
             OLIST: ${OLIST}
-            WORKDIR: ${WORKDIR}
+            WORKSPACE_PATH: ${WORKSPACE_PATH}
       env_file: .env
       volumes:
-         - wkspace:${WORKDIR:-'/wkspace'}
+         - ../workspace:${WORKSPACE_PATH}
          - /var/run/docker.sock:/var/run/docker-host.sock
 networks:
    frontend:
    backend:
-
-volumes:
-   wkspace:
