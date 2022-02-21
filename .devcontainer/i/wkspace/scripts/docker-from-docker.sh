@@ -30,7 +30,7 @@ then
    pacman -Sy --noconfirm socat
 
    # replace placeholders by corresponding values...
-   sed -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/docker-init.stub
+   sed -e "s/\$ENABLE_NONROOT_DOCKER/${ENABLE_NONROOT_DOCKER}/g" -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/docker-init.stub
 else
    echo -e "#!/usr/bin/env bash\n\n" > /tmp/docker-init.stub
 fi
