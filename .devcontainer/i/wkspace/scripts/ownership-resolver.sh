@@ -1,9 +1,14 @@
 #! /usr/bin/env bash
 
-resolve_ownership() {
+USERNAME=${1:-'code'}
+OLIST=${@:2}
 
-   local username=${1:-'code'}
-   local list=${@:2}
+if [ "$2" == "" ]
+then
+   exit
+fi
+
+OLIST=$(echo ${OLIST} | sed "s/:/ /")
 
 tee /usr/local/share/init.d/ownership-resolver.sh > /dev/null \
 << EOF
@@ -11,7 +16,7 @@ tee /usr/local/share/init.d/ownership-resolver.sh > /dev/null \
 
 set -e
 
-for arg in $list
+for arg in $OLIST
 do
    if [ -e \$arg ]
    then
@@ -30,11 +35,5 @@ done
 set +e
 
 EOF
-}
 
-
-if [ "$2" != "" ]
-then
-   resolve_ownership $@
-   echo -e "\nDone"
-fi
+echo "\nDone !\n"

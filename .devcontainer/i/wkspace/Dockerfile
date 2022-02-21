@@ -40,8 +40,10 @@ ADD ./scripts/node.sh /tmp/scripts/
 RUN bash /tmp/scripts/node.sh "${USERNAME}" "${NODE_VERSION}"
 
 # Resolve paths given as arguments to allow user nonroot after container creation to access it ...
+ARG OLIST="${WORKDIR}"
+
 ADD ./scripts/ownership-resolver.sh /tmp/scripts/
-RUN bash /tmp/scripts/ownership-resolver.sh "${USERNAME}" "${WORKDIR}"
+RUN bash /tmp/scripts/ownership-resolver.sh "${USERNAME}" "${OLIST}"
 
 # Allow nonroot user to run custom entrypoint script
 RUN chown "${USERNAME}":root /usr/local/share/init.d /usr/local/share/init.sh
