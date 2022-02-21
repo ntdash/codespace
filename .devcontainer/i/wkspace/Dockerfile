@@ -19,8 +19,13 @@ ARG USERNAME='code'
 ARG UPASSWD='secret'
 ARG WORKDIR='/wkspace'
 
+ENV CUSTOM_ALIAS_PATH="/home/${USERNAME}/.oh-my-zsh/custom/__aliases.zsh"
+
 ADD ./scripts/setup-user.sh /tmp/scripts/
 RUN bash /tmp/scripts/setup-user.sh "${USERNAME}" "${UPASSWD}"
+
+# User custom aliases added after the installation of zsh and OhmyZsh in `setup-user.sh` script
+ADD --chown=${USERNAME} ./config/aliases.sh /home/${USERNAME}/.oh-my-zsh/custom/aliases.zsh
 
 # Custom entrypoint Setup
 ADD ./scripts/init.sh /usr/local/share/

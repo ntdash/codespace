@@ -31,5 +31,13 @@ su ${USERNAME} -c 'bash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/
 # Enable docker and docker-compose plugin in zshrc
 sed -i -r 's/^plugins=\((.*)\)$/plugins=\(\1 docker docker-compose\)/' /home/${USERNAME}/.zshrc
 
+# custom aliases
+tee "${CUSTOM_ALIAS_PATH}" > /dev/null <<EOF
+#! /usr/bin/env zsh
+
+# Here contain custom alias for easy/fast command typing and workflow resolvance
+
+EOF
+
 # Change user default shell into zsh
 usermod -s /usr/bin/zsh "${USERNAME}"
