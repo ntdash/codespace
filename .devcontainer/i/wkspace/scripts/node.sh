@@ -1,6 +1,6 @@
 # args and export for script runtime
 
-export NVM_DIR=${1:-"/usr/local/share/nvm"}
+export NVM_DIR="/usr/local/share/nvm"
 export NODE_VERSION=${2:-"lts"}
 USERNAME=${1:-'code'}
 export NVM_VERSION="0.38.0"
