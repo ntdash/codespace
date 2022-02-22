@@ -2,6 +2,8 @@
 
 set -e
 
+#::COMPOSE_FILE_BINDER_PLACEHOLDER::
+
 # Docker commands usage by non-root user resolvance sections
 SOCAT_PATH_BASE=/tmp/vscr-docker-from-docker
 SOCAT_LOG=$SOCAT_PATH_BASE.log

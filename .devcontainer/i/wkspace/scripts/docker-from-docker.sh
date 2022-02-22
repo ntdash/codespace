@@ -1,7 +1,8 @@
 #! /usr/bin/env bash
 
 USERNAME=${1:-'code'}
-ENABLE_NONROOT_DOCKER=${2:-"true"}
+DEV_CONFIG_PATH=${2:-'undefined'}
+ENABLE_NONROOT_DOCKER=${3:-'true'}
 
 
 SOURCE_SOCKET="/var/run/docker-host.sock"
@@ -34,6 +35,27 @@ then
 else
    echo -e "#!/usr/bin/env bash\n\n" > /tmp/docker-init.stub
 fi
+
+# Store COMPOSE_FILE binder script in $DCO_ALIAS_SCRIPT
+read -r -d '' DCO_ALIAS_SCRIPT << EOF
+
+# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATHNAME
+
+COMPOSE_FILE=$DEV_CONFIG_PATHNAME/docker-compose.yml
+
+if [ -f \$COMPOSE_FILE ]
+then
+   echo -e "alias docker-compose=\\"docker-compose -f \$COMPOSE_FILE\\n\\n\\"" >> \$CUSTOM_ALIASES_PATH
+fi
+
+EOF
+
+if [ "$DEV_CONFIG_PATH" != "undefined" ]
+then
+   DCO_ALIAS_SCRIPT=""
+fi
+
+sed -e "s/#::COMPOSE_FILE_BINDER_PLACEHOLDER::/${DCO_ALIAS_SCRIPT}/" /tmp/docker-init.stub
 
 # Move stub into init.d
 mv /tmp/docker-init.stub /usr/local/share/init.d/docker-init.sh

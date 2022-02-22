@@ -14,10 +14,13 @@ services:
             NODE_VERSION: ${NODE_VERSION}
             OLIST: ${OLIST}
             WORKSPACE_PATH: ${WORKSPACE_PATH}
+            DEV_CONFIG_PATH: ${DEV_CONFIG_PATH}
       env_file: .env
       volumes:
+         - .:${DEV_CONFIG_PATH}
          - ../workspace:${WORKSPACE_PATH}
          - /var/run/docker.sock:/var/run/docker-host.sock
+         
 networks:
    frontend:
    backend:
