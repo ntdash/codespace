@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+[ -d "/tmp/scripts" ] && rm -rf "/tmp/scripts"
+
+
 fpath="/usr/local/share"
 report_fpath="${fpath}/report"
 

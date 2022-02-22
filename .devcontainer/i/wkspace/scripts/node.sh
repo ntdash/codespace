@@ -34,10 +34,10 @@ usermod -a -G nvm ${USERNAME}
 mkdir -p ${NVM_DIR}
 chown :nvm ${NVM_DIR}
 chmod g+s ${NVM_DIR}
-su ${USERNAME} -c "$(cat /tmp/node-installer.stub)" 2>&1
+su ${USERNAME} -c "$(cat /tmp/scripts/node-installer.stub)" 2>&1
 
 # update bash and zsh `rc` files
-updaterc "$(cat /tmp/nvm-loader.stub)"
+updaterc "$(cat /tmp/scripts/nvm-loader.stub)"
 
 # install yarn
 if type yarn > /dev/null 2>&1; then

@@ -31,9 +31,9 @@ then
    pacman -Sy --noconfirm socat
 
    # replace placeholders by corresponding values...
-   sed -e "s/\$ENABLE_NONROOT_DOCKER/${ENABLE_NONROOT_DOCKER}/g" -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/docker-init.stub
+   sed -e "s/\$ENABLE_NONROOT_DOCKER/${ENABLE_NONROOT_DOCKER}/g" -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/scripts/docker-init.stub
 else
-   echo -e "#!/usr/bin/env bash\n\n" > /tmp/docker-init.stub
+   echo -e "#!/usr/bin/env bash\n\n" > /tmp/scripts/docker-init.stub
 fi
 
 # Store COMPOSE_FILE binder script in $DCO_ALIAS_SCRIPT
@@ -55,9 +55,9 @@ then
    DCO_ALIAS_SCRIPT=""
 fi
 
-sed -e "s/#::COMPOSE_FILE_BINDER_PLACEHOLDER::/${DCO_ALIAS_SCRIPT}/" /tmp/docker-init.stub
+sed -e "s/#::COMPOSE_FILE_BINDER_PLACEHOLDER::/${DCO_ALIAS_SCRIPT}/" /tmp/scripts/docker-init.stub
 
 # Move stub into init.d
-mv /tmp/docker-init.stub /usr/local/share/init.d/docker-init.sh
+mv /tmp/scripts/docker-init.stub /usr/local/share/init.d/docker-init.sh
 
 echo -e "\nDone!\n"
