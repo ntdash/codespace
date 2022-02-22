@@ -22,7 +22,7 @@ touch "${SOURCE_SOCKET}"
 ln -s "${SOURCE_SOCKET}" "${TARGET_SOCKET}"
 
 # Allow nonroot user to use docker 
-if [ "${ENABLE_NONROOT_DOCKER}" == "true" ];
+if [ "${ENABLE_NONROOT_DOCKER}" == "true" ]
 then
    # Enabling docker usage to nonroot user
    chown -h "${USERNAME}":root "${TARGET_SOCKET}"
@@ -31,33 +31,37 @@ then
    pacman -Sy --noconfirm socat
 
    # replace placeholders by corresponding values...
-   sed -e "s/\$ENABLE_NONROOT_DOCKER/${ENABLE_NONROOT_DOCKER}/g" -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/scripts/docker-init.stub
+   sed -i -e "s^\$ENABLE_NONROOT_DOCKER^$ENABLE_NONROOT_DOCKER^g" -e "s^\$USERNAME^$USERNAME^g" -e "s^\$TARGET_SOCKET^$TARGET_SOCKET^g" -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" ./file
+
 else
-   echo -e "#!/usr/bin/env bash\n\n" > /tmp/scripts/docker-init.stub
+   echo -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > ./file
 fi
 
-# Store COMPOSE_FILE binder script in $DCO_ALIAS_SCRIPT
-read -r -d '' DCO_ALIAS_SCRIPT << EOF
+# Try some other method to process the blocks below ... the one used is not optimal
 
-# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATHNAME
+# Store COMPOSE_FILE binder script temp file
+tee /tmp/dco_alias_script.part > /dev/null << EOF
 
-COMPOSE_FILE=$DEV_CONFIG_PATHNAME/docker-compose.yml
+# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATH
+
+COMPOSE_FILE=$DEV_CONFIG_PATH/docker-compose.yml
 
 if [ -f \$COMPOSE_FILE ]
 then
-   echo -e "alias docker-compose=\\"docker-compose -f \$COMPOSE_FILE\\n\\n\\"" >> \$CUSTOM_ALIASES_PATH
+   echo -e "alias docker-compose=\"docker-compose -f \$COMPOSE_FILE\"" | tee -a \$CUSTOM_ALIASES_PATH
 fi
 
 EOF
 
-if [ "$DEV_CONFIG_PATH" != "undefined" ]
-then
-   DCO_ALIAS_SCRIPT=""
-fi
+# Empty file if dev config file not defined ...
+[ "$DEV_CONFIG_PATH" == "undefined" ] && echo "" > /tmp/dco_alias_script.part
 
-sed -e "s/#::COMPOSE_FILE_BINDER_PLACEHOLDER::/${DCO_ALIAS_SCRIPT}/" /tmp/scripts/docker-init.stub
+sed -i -e "/# PH_COMPOSE_FILE_BINDER/r /tmp/dco_alias_script.part" -e '/# PH_COMPOSE_FILE_BINDER/d' /tmp/scripts/docker-init.stub
 
-# Move stub into init.d
+# remove tmp file
+rm -f /tmp/dco_alias_script.part
+
+# Move processed stub into init.d
 mv /tmp/scripts/docker-init.stub /usr/local/share/init.d/docker-init.sh
 
 echo -e "\nDone!\n"

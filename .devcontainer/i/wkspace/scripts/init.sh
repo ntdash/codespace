@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 
+# clean up
 [ -d "/tmp/scripts" ] && rm -rf "/tmp/scripts"
 
 
