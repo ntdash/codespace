@@ -15,4 +15,4 @@ sed -i -e "s^\#PH_OLIST^$OLIST^" /tmp/scripts/ownership-resolver.stub
 # Move processed stub into init.d
 mv /tmp/scripts/ownership-resolver.stub /usr/local/share/init.d/ownership-resolver.sh
 
-echo "\nDone !\n"
+echo -e "\nDone!\n"

@@ -31,10 +31,15 @@ then
    pacman -Sy --noconfirm socat
 
    # replace placeholders by corresponding values...
-   sed -i -e "s^\$ENABLE_NONROOT_DOCKER^$ENABLE_NONROOT_DOCKER^g" -e "s^\$USERNAME^$USERNAME^g" -e "s^\$TARGET_SOCKET^$TARGET_SOCKET^g" -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" ./file
+   sed -i \
+      -e "s^\$ENABLE_NONROOT_DOCKER^$ENABLE_NONROOT_DOCKER^g" \
+      -e "s^\$USERNAME^$USERNAME^g" \
+      -e "s^\$TARGET_SOCKET^$TARGET_SOCKET^g" \
+      -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" /tmp/scripts/docker-init.stub
 
 else
-   echo -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > ./file
+   echo \
+      -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > /tmp/scripts/docker-init.stub
 fi
 
 # Try some other method to process the blocks below ... the one used is not optimal
@@ -48,7 +53,7 @@ COMPOSE_FILE=$DEV_CONFIG_PATH/docker-compose.yml
 
 if [ -f \$COMPOSE_FILE ]
 then
-   echo -e "alias docker-compose=\"docker-compose -f \$COMPOSE_FILE\"" | tee -a \$CUSTOM_ALIASES_PATH
+   echo -e "alias docker-compose=\"docker-compose -f \$COMPOSE_FILE\"" >> \$CUSTOM_ALIASES_PATH
 fi
 
 EOF
@@ -56,7 +61,9 @@ EOF
 # Empty file if dev config file not defined ...
 [ "$DEV_CONFIG_PATH" == "undefined" ] && echo "" > /tmp/dco_alias_script.part
 
-sed -i -e "/# PH_COMPOSE_FILE_BINDER/r /tmp/dco_alias_script.part" -e '/# PH_COMPOSE_FILE_BINDER/d' /tmp/scripts/docker-init.stub
+sed -i \
+   -e "/# PH_COMPOSE_FILE_BINDER/r /tmp/dco_alias_script.part" \
+   -e '/# PH_COMPOSE_FILE_BINDER/d' /tmp/scripts/docker-init.stub
 
 # remove tmp file
 rm -f /tmp/dco_alias_script.part
