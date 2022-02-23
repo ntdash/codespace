@@ -65,7 +65,12 @@ if type yarn > /dev/null 2>&1
 then
     echo "Yarn already installed."
 else
-   pacman -Sy --noconfirm yarn
+   if type npm > /dev/null 2>&1
+   then
+      npm install --global yarn
+   else
+      pacman -Sy --noconfirm yarn
+   fi
 fi
 
 echo -e "\nDone!\n"
