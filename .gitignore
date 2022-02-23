@@ -2,3 +2,4 @@ note-temp
 .env
 test/
 stash/
+.vscode

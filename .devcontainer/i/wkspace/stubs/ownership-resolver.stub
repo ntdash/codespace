@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+
+set -e
+
+# try using setfacl command to manage folder ownership
+
+for arg in #PH_OLIST
+do
+   if [ -e $arg ]
+   then
+      # Add recursive option to command if $arg is a folder ...
+      if [ -d $arg ]
+      then
+         recursive_opt='-R'
+      else
+         recursive_opt=""
+      fi
+      # Apply ownership change
+      chown ${username}:root $recursive_opt $arg
+   fi
+done
+
+set +e

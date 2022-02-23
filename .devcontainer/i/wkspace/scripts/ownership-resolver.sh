@@ -1,40 +1,18 @@
 #! /usr/bin/env bash
 
-resolve_ownership() {
+USERNAME=${1:-'code'}
+OLIST=${@:2}
 
-   local username=${1:-'code'}
-   local list=${@:2}
-
-tee /usr/local/share/init.d/ownership-resolver.sh > /dev/null \
-<< EOF
-#! /usr/bin/env bash
-
-set -e
-
-for arg in $list
-do
-   if [ -e \$arg ]
-   then
-      # Add recursive option to command if $arg is a folder ...
-      if [ -d \$arg ]
-      then
-         recursive_opt='-R'
-      else
-         recursive_opt=""
-      fi
-      # Apply ownership change
-      chown ${username}:root \$recursive_opt \$arg
-   fi
-done
-
-set +e
-
-EOF
-}
-
-
-if [ "$2" != "" ]
+if [ "$2" == "" ]
 then
-   resolve_ownership $@
-   echo -e "\nDone"
+   exit
 fi
+
+OLIST=$(echo $OLIST | sed 's/:/ /g')
+
+sed -i -e "s^\#PH_OLIST^$OLIST^" "${STUB_PATH}/ownership-resolver.stub"
+
+# Move processed stub into init.d
+mv "${STUB_PATH}/ownership-resolver.stub" "${ENTRYPOINT_INIT_D}/ownership-resolver.sh"
+
+echo -e "\nDone!\n"
