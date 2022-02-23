@@ -39,7 +39,6 @@ ENV CUSTOM_ALIAS_PATH="/home/${USERNAME}/.oh-my-zsh/custom/_aliases.zsh"
 ##################################################################################################################
 
 
-
 ADD ./scripts/setup-user.sh "${SCRIPT_PATH}/"
 RUN bash "${SCRIPT_PATH}/setup-user.sh" "${USERNAME}" "${UPASSWD}"
 
@@ -64,6 +63,7 @@ RUN mkdir -p "${ENTRYPOINT_INIT_D}" \
 ARG DEV_CONFIG_PATH='undefined'
 ARG ENABLE_NONROOT_DOCKER='true'
 
+ADD ./stubs/dco-alias.stub "${STUB_PATH}/"
 ADD ./stubs/docker-init.stub "${STUB_PATH}/"
 ADD ./scripts/docker-from-docker.sh "${SCRIPT_PATH}/"
 

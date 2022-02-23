@@ -42,4 +42,4 @@ EOF
 # Change user default shell into zsh
 usermod -s /usr/bin/zsh "${USERNAME}"
 
-echo -e "\nDone!\m"
+echo -e "\nDone!\n"

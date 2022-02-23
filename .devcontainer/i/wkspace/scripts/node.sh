@@ -16,28 +16,30 @@ updaterc() {
       local user_rc_path="/home/${USERNAME}"
    fi
 
-   echo "Updating /home/${USERNAME}/.bashrc and /home/${USERNAME}/.zshrc..."
+   echo "Updating "${user_rc_path}.bashrc" and "${user_rc_path}.zshrc"..."
 
-   if [[ "$(cat /home/${USERNAME}/.bashrc)" != *"$content"* ]];
+   if [[ "$(cat ${user_rc_path}/.bashrc)" != *"$1"* ]]
    then
-      echo "\n\n$1" >> "/home/${USERNAME}/.bashrc"
+      echo -e "\n\n$1" >> "${user_rc_path}/.bashrc"
    fi
 
-   if [[ "$(cat /home/${USERNAME}/.zshrc)" != *"$content"* ]]
+   if [[ "$(cat ${user_rc_path}/.zshrc)" != *"$1"* ]]
    then
-      echo "\n\n$1" >> "/home/${USERNAME}/.zshrc"
+      echo -e "\n\n$1" >> "${user_rc_path}/.zshrc"
    fi
 }
+
 
 # Install node and npm via nvm
 
 if [ "${NODE_VERSION}" = "none" ]
 then
-    export NODE_VERSION=
+   export NODE_VERSION=
 elif [ "${NODE_VERSION}" = "lts" ]
 then
-    export NODE_VERSION="lts/*"
+   export NODE_VERSION="lts/*"
 fi
+
 
 if ! cat /etc/group | grep -e "^nvm:" > /dev/null 2>&1
 then
@@ -59,18 +61,5 @@ updaterc "$(cat <<EOF
    [ -s "\$NVM_DIR/bash_completion" ] && . "\$NVM_DIR/bash_completion"
 EOF
 )"
-
-# Install yarn
-if type yarn > /dev/null 2>&1
-then
-    echo "Yarn already installed."
-else
-   if type npm > /dev/null 2>&1
-   then
-      npm install --global yarn
-   else
-      pacman -Sy --noconfirm yarn
-   fi
-fi
 
 echo -e "\nDone!\n"
