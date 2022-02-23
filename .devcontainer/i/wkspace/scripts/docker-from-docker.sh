@@ -4,6 +4,9 @@ USERNAME=${1:-'code'}
 DEV_CONFIG_PATH=${2:-'undefined'}
 ENABLE_NONROOT_DOCKER=${3:-'true'}
 
+DOCKER_INIT_STUB_PATH="${STUB_PATH}/docker-init.stub"
+DCO_ALIAS_STUB_PATH="${STUB_PATH}/dco-alias.stub"
+
 
 SOURCE_SOCKET="/var/run/docker-host.sock"
 TARGET_SOCKET="/var/run/docker.sock"
@@ -22,7 +25,7 @@ touch "${SOURCE_SOCKET}"
 ln -s "${SOURCE_SOCKET}" "${TARGET_SOCKET}"
 
 # Allow nonroot user to use docker 
-if [ "${ENABLE_NONROOT_DOCKER}" == "true" ];
+if [ "${ENABLE_NONROOT_DOCKER}" == "true" ]
 then
    # Enabling docker usage to nonroot user
    chown -h "${USERNAME}":root "${TARGET_SOCKET}"
@@ -31,33 +34,33 @@ then
    pacman -Sy --noconfirm socat
 
    # replace placeholders by corresponding values...
-   sed -e "s/\$ENABLE_NONROOT_DOCKER/${ENABLE_NONROOT_DOCKER}/g" -e "s/\$USERNAME/${USERNAME}/g" -e "s/\$TARGET_SOCKET/${TARGET_SOCKET}/g" -e "s/\$SOURCE_SOCKET/${SOURCE_SOCKET}/g" /tmp/docker-init.stub
+   sed -i \
+      -e "s^\$ENABLE_NONROOT_DOCKER^$ENABLE_NONROOT_DOCKER^g" \
+      -e "s^\$USERNAME^$USERNAME^g" \
+      -e "s^\$TARGET_SOCKET^$TARGET_SOCKET^g" \
+      -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" "${DOCKER_INIT_STUB_PATH}"
+
 else
-   echo -e "#!/usr/bin/env bash\n\n" > /tmp/docker-init.stub
+   echo \
+      -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > "${DOCKER_INIT_STUB_PATH}"
 fi
 
-# Store COMPOSE_FILE binder script in $DCO_ALIAS_SCRIPT
-read -r -d '' DCO_ALIAS_SCRIPT << EOF
+# Try some other method to process the blocks below ... the one used is not optimal
 
-# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATHNAME
-
-COMPOSE_FILE=$DEV_CONFIG_PATHNAME/docker-compose.yml
-
-if [ -f \$COMPOSE_FILE ]
-then
-   echo -e "alias docker-compose=\\"docker-compose -f \$COMPOSE_FILE\\n\\n\\"" >> \$CUSTOM_ALIASES_PATH
-fi
-
-EOF
-
+# Empty file if dev config file not defined ...
 if [ "$DEV_CONFIG_PATH" != "undefined" ]
 then
-   DCO_ALIAS_SCRIPT=""
+   sed -i -e "s^\$DEV_CONFIG_PATH^$DEV_CONFIG_PATH^" "${DCO_ALIAS_STUB_PATH}"
+else
+   echo "" > "${DCO_ALIAS_STUB_PATH}"
 fi
 
-sed -e "s/#::COMPOSE_FILE_BINDER_PLACEHOLDER::/${DCO_ALIAS_SCRIPT}/" /tmp/docker-init.stub
+sed -i \
+   -e "/# PH_COMPOSE_FILE_BINDER/r ${DCO_ALIAS_STUB_PATH}" \
+   -e '/# PH_COMPOSE_FILE_BINDER/d' "${DOCKER_INIT_STUB_PATH}"
 
-# Move stub into init.d
-mv /tmp/docker-init.stub /usr/local/share/init.d/docker-init.sh
+
+# Move processed stub into init.d
+mv "${DOCKER_INIT_STUB_PATH}" "${ENTRYPOINT_INIT_D}/docker-init.sh"
 
 echo -e "\nDone!\n"

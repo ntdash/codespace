@@ -8,11 +8,11 @@ then
    exit
 fi
 
-OLIST=$(echo ${OLIST} | sed "s/:/ /")
+OLIST=$(echo $OLIST | sed 's/:/ /g')
 
-sed "s/#OLIST/${OLIST}/" /tmp/ownership-resolver.stub
+sed -i -e "s^\#PH_OLIST^$OLIST^" "${STUB_PATH}/ownership-resolver.stub"
 
-# Move stub into init.d
-mv /tmp/ownership-resolver.stub /usr/local/share/init.d/ownership-resolver.sh
+# Move processed stub into init.d
+mv "${STUB_PATH}/ownership-resolver.stub" "${ENTRYPOINT_INIT_D}/ownership-resolver.sh"
 
-echo "\nDone !\n"
+echo -e "\nDone!\n"

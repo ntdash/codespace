@@ -1,0 +1,8 @@
+# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATH
+
+COMPOSE_FILE=$DEV_CONFIG_PATH/docker-compose.yml
+
+if [ -f $COMPOSE_FILE ]
+then
+   echo -e "alias docker-compose=\"docker-compose -f $COMPOSE_FILE\"" >> "$CUSTOM_ALIAS_PATH"
+fi

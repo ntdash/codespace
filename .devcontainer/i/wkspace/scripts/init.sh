@@ -1,17 +1,23 @@
 #! /usr/bin/env bash
 
-fpath="/usr/local/share"
-report_fpath="${fpath}/report"
+
+if [ ! -d ${ENTRYPOINT_INIT_D} ]
+then 
+   bash -c "$@"
+   exit
+fi
+
+REPORT_FILE="${ENTRYPOINT_INIT_PATH}/report.log"
 
 # create report file
-touch "${report_fpath}"
+touch "${REPORT_FILE}"
 
-for file in $fpath/init.d/*.sh
+for file in ${ENTRYPOINT_INIT_D}/*.sh
 do
    if [ -f $file ]
    then
-      echo -e "=======\n[$(date)]: Sourcing report of ($file)...\n=======" >> "${report_fpath}"
-      source $file | tee -a "${report_fpath}"
+      echo -e "=======\n[$(date)]: Sourcing report of ($file)...\n=======" >> "${REPORT_FILE}"
+      source $file | tee -a "${REPORT_FILE}"
       echo -e "\n\n"
    fi
 done
