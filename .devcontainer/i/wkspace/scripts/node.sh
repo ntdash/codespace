@@ -57,6 +57,7 @@ EOF
 if type yarn > /dev/null 2>&1; then
     echo "Yarn already installed."
 else
+   if npm
    pacman -Sy --noconfirm yarn
 fi
 
