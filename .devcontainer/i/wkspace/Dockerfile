@@ -94,8 +94,9 @@ RUN bash "${SCRIPT_PATH}/ownership-resolver.sh" "${USERNAME}" "${OLIST}"
 RUN chown "${USERNAME}":root "${ENTRYPOINT_INIT_D}" "${ENTRYPOINT_INIT_PATH}/init.sh"
 
 ##################################################################################################################
-# Entry point
+# Dockerfile Footer
 ##################################################################################################################
 
-ENTRYPOINT [ "${ENTRYPOINT_INIT_PATH}/init.sh" ]
+ENTRYPOINT ["/usr/local/share/init.sh"]
+
 CMD ["while sleep 1000; do :; done"]

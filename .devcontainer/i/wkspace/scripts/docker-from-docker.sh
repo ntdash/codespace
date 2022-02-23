@@ -50,7 +50,7 @@ fi
 # Empty file if dev config file not defined ...
 if [ "$DEV_CONFIG_PATH" != "undefined" ]
 then
-   sed -i -e "s^\$DEV_CONFIG_PATH^$DEV_CONFIG_PATH^" "${DOCKER_INIT_STUB_PATH}"
+   sed -i -e "s^\$DEV_CONFIG_PATH^$DEV_CONFIG_PATH^" "${DCO_ALIAS_STUB_PATH}"
 else
    echo "" > "${DCO_ALIAS_STUB_PATH}"
 fi
@@ -59,8 +59,6 @@ sed -i \
    -e "/# PH_COMPOSE_FILE_BINDER/r ${DCO_ALIAS_STUB_PATH}" \
    -e '/# PH_COMPOSE_FILE_BINDER/d' "${DOCKER_INIT_STUB_PATH}"
 
-# remove tmp file
-rm -f "${DCO_ALIAS_STUB_PATH}"
 
 # Move processed stub into init.d
 mv "${DOCKER_INIT_STUB_PATH}" "${ENTRYPOINT_INIT_D}/docker-init.sh"

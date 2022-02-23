@@ -1,10 +1,5 @@
 #! /usr/bin/env bash
 
-# clean up
-[ -d "${STUB_PATH}" ] && rm -rf "${STUB_PATH}"
-[ -d "${SCRIPT_PATH}" ] && rm -rf "${SCRIPT_PATH}"
-
-
 
 if [ ! -d ${ENTRYPOINT_INIT_D} ]
 then 

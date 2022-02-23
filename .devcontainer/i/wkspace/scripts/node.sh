@@ -20,12 +20,12 @@ updaterc() {
 
    if [[ "$(cat /home/${USERNAME}/.bashrc)" != *"$content"* ]];
    then
-      tee -a "/home/${USERNAME}/.bashrc"
+      echo "\n\n$1" >> "/home/${USERNAME}/.bashrc"
    fi
 
    if [[ "$(cat /home/${USERNAME}/.zshrc)" != *"$content"* ]]
    then
-      tee -a "/home/${USERNAME}/.zshrc"
+      echo "\n\n$1" >> "/home/${USERNAME}/.zshrc"
    fi
 }
 
