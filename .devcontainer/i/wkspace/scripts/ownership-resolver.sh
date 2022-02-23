@@ -10,9 +10,9 @@ fi
 
 OLIST=$(echo $OLIST | sed 's/:/ /g')
 
-sed -i -e "s^\#PH_OLIST^$OLIST^" /tmp/scripts/ownership-resolver.stub
+sed -i -e "s^\#PH_OLIST^$OLIST^" "${STUB_PATH}/ownership-resolver.stub"
 
 # Move processed stub into init.d
-mv /tmp/scripts/ownership-resolver.stub /usr/local/share/init.d/ownership-resolver.sh
+mv "${STUB_PATH}/ownership-resolver.stub" "${ENTRYPOINT_INIT_D}/ownership-resolver.sh"
 
 echo -e "\nDone!\n"

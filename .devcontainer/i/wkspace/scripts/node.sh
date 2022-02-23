@@ -49,7 +49,7 @@ usermod -a -G nvm ${USERNAME}
 mkdir -p ${NVM_DIR}
 chown :nvm ${NVM_DIR}
 chmod g+s ${NVM_DIR}
-su ${USERNAME} -c "bash /tmp/scripts/node-installer.stub" 2>&1
+su ${USERNAME} -c "bash ${STUB_PATH}/node-installer.stub" 2>&1
 
 # Update bash and zsh `rc` files
 

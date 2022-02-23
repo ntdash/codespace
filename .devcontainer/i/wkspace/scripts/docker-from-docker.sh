@@ -4,6 +4,9 @@ USERNAME=${1:-'code'}
 DEV_CONFIG_PATH=${2:-'undefined'}
 ENABLE_NONROOT_DOCKER=${3:-'true'}
 
+DOCKER_INIT_STUB_PATH="${STUB_PATH}/docker-init.stub"
+DCO_ALIAS_STUB_PATH="${STUB_PATH}/dco-alias.stub"
+
 
 SOURCE_SOCKET="/var/run/docker-host.sock"
 TARGET_SOCKET="/var/run/docker.sock"
@@ -35,40 +38,31 @@ then
       -e "s^\$ENABLE_NONROOT_DOCKER^$ENABLE_NONROOT_DOCKER^g" \
       -e "s^\$USERNAME^$USERNAME^g" \
       -e "s^\$TARGET_SOCKET^$TARGET_SOCKET^g" \
-      -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" /tmp/scripts/docker-init.stub
+      -e "s^\$SOURCE_SOCKET^$SOURCE_SOCKET^g" "${DOCKER_INIT_STUB_PATH}"
 
 else
    echo \
-      -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > /tmp/scripts/docker-init.stub
+      -e "#!/usr/bin/env bash\n\n# PH_COMPOSE_FILE_BINDER" > "${DOCKER_INIT_STUB_PATH}"
 fi
 
 # Try some other method to process the blocks below ... the one used is not optimal
 
-# Store COMPOSE_FILE binder script temp file
-tee /tmp/dco_alias_script.part > /dev/null << EOF
-
-# Bind $HOST's compose-file to docker-compose command in a way to increase its usage scope from $DEV_CONFIG_PATH
-
-COMPOSE_FILE=$DEV_CONFIG_PATH/docker-compose.yml
-
-if [ -f \$COMPOSE_FILE ]
+# Empty file if dev config file not defined ...
+if [ "$DEV_CONFIG_PATH" != "undefined" ]
 then
-   echo -e "alias docker-compose=\"docker-compose -f \$COMPOSE_FILE\"" >> \$CUSTOM_ALIASES_PATH
+   sed -i -e "s^\$DEV_CONFIG_PATH^$DEV_CONFIG_PATH^" "${DOCKER_INIT_STUB_PATH}"
+else
+   echo "" > "${DCO_ALIAS_STUB_PATH}"
 fi
 
-EOF
-
-# Empty file if dev config file not defined ...
-[ "$DEV_CONFIG_PATH" == "undefined" ] && echo "" > /tmp/dco_alias_script.part
-
 sed -i \
-   -e "/# PH_COMPOSE_FILE_BINDER/r /tmp/dco_alias_script.part" \
-   -e '/# PH_COMPOSE_FILE_BINDER/d' /tmp/scripts/docker-init.stub
+   -e "/# PH_COMPOSE_FILE_BINDER/r ${DCO_ALIAS_STUB_PATH}" \
+   -e '/# PH_COMPOSE_FILE_BINDER/d' "${DOCKER_INIT_STUB_PATH}"
 
 # remove tmp file
-rm -f /tmp/dco_alias_script.part
+rm -f "${DCO_ALIAS_STUB_PATH}"
 
 # Move processed stub into init.d
-mv /tmp/scripts/docker-init.stub /usr/local/share/init.d/docker-init.sh
+mv "${DOCKER_INIT_STUB_PATH}" "${ENTRYPOINT_INIT_D}/docker-init.sh"
 
 echo -e "\nDone!\n"
