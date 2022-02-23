@@ -18,18 +18,24 @@ updaterc() {
 
    echo "Updating /home/${USERNAME}/.bashrc and /home/${USERNAME}/.zshrc..."
 
-   [[ "$(cat /home/${USERNAME}/.bashrc)" != *"$content"* ]]
+   if [[ "$(cat /home/${USERNAME}/.bashrc)" != *"$content"* ]];
+   then
       tee -a "/home/${USERNAME}/.bashrc"
+   fi
 
    if [[ "$(cat /home/${USERNAME}/.zshrc)" != *"$content"* ]]
+   then
       tee -a "/home/${USERNAME}/.zshrc"
+   fi
 }
 
 # Install node and npm via nvm
 
-if [ "${NODE_VERSION}" = "none" ]; then
+if [ "${NODE_VERSION}" = "none" ]
+then
     export NODE_VERSION=
-elif [ "${NODE_VERSION}" = "lts" ]; then
+elif [ "${NODE_VERSION}" = "lts" ]
+then
     export NODE_VERSION="lts/*"
 fi
 
@@ -47,17 +53,18 @@ su ${USERNAME} -c "bash /tmp/scripts/node-installer.stub" 2>&1
 
 # Update bash and zsh `rc` files
 
-updaterc <<EOF
+updaterc "$(cat <<EOF
    export NVM_DIR="$NVM_DIR"
    [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
    [ -s "\$NVM_DIR/bash_completion" ] && . "\$NVM_DIR/bash_completion"
 EOF
+)"
 
 # Install yarn
-if type yarn > /dev/null 2>&1; then
+if type yarn > /dev/null 2>&1
+then
     echo "Yarn already installed."
 else
-   if npm
    pacman -Sy --noconfirm yarn
 fi
 
